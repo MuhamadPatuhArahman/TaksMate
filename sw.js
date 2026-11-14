@@ -1,6 +1,6 @@
 // Service worker gabungan: cache offline + notifikasi (HP & laptop)
 // Naikkan angka versi ini setiap kali file aplikasi diubah
-const CACHE = 'Task Mate-v11';
+const CACHE = 'Task Mate-v12';
 const FILES = ['./', './index.html', './app.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', function (e) {
