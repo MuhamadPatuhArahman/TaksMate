@@ -1,7 +1,7 @@
 // Service worker gabungan: cache offline + notifikasi (HP & laptop)
 // Naikkan angka versi ini setiap kali file aplikasi diubah
-const CACHE = 'Task Mate-v13';
-const FILES = ['./', './index.html', './app.html', './manifest.json', './icon-192.png', './icon-512.png'];
+const CACHE = 'kelompok5-v13';
+const FILES = ['./', './index.html', './app.html', './manifest.json', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', function (e) {
   e.waitUntil(
@@ -42,7 +42,15 @@ self.addEventListener('fetch', function (e) {
 
 // Notifikasi diketuk -> buka/fokuskan aplikasi
 self.addEventListener('notificationclick', function (e) {
-  e.notification.close();
+  var isAlarm = (e.notification.tag || '').indexOf('alarm-') === 0;
+  // Alarm tetap tampil (dan terus berdering) sampai tombol Kerjakan/Tidak ditekan
+  if (!isAlarm || e.action === 'kerjakan' || e.action === 'tidak') e.notification.close();
+  if (e.action === 'kerjakan' || e.action === 'tidak') {
+    e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (list) {
+      list.forEach(function (c) { c.postMessage({ type: 'alarm-answer' }); });
+    }));
+    return;
+  }
   e.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (list) {
       for (var i = 0; i < list.length; i++) {
